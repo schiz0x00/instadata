@@ -1,0 +1,10 @@
+# Runtime dependencies. The browser tier is optional and lives in
+# requirements-browser.txt; nothing here imports Chromium.
+anyio>=4.14
+curl_cffi>=0.13
+httpx[http2,socks]>=0.28
+loguru>=0.7
+orjson>=3.10
+pydantic>=2.10
+rich>=14.0
+typer>=0.15

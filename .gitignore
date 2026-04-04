@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test / tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Session cookies. Named rather than blanket-ignoring *.json, which also
+# swallowed test fixtures and any config a user added.
+cookies.txt
+cookies*.json
+*.cookies.json
+
+# Scraped output. The default output directory is ./bowerbird, which cannot be
+# ignored here without also ignoring the source package of the same name — so
+# do not run the scraper from the repo root. Use -o, or run it anywhere else.
+data/
+output/
+*.csv
+*.jsonl
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
