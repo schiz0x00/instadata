@@ -1,0 +1,7 @@
+# Tier 4 only. Install these if you want the scraper to be able to escalate to
+# a real browser; without them tier 4 is simply skipped.
+#
+#   pip install -r requirements-browser.txt && playwright install chromium
+-r requirements.txt
+cloakbrowser>=0.5.3
+playwright>=1.62
