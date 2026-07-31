@@ -35,7 +35,7 @@ INSTAGRAM_APP_ID = "936619743392459"
 #: Where a run writes when ``--output`` is not given, relative to the working
 #: directory. Named after the tool so a bare run is self-describing rather than
 #: dropping a generic ``data/`` into whatever directory you happened to be in.
-DEFAULT_OUTPUT_DIR = Path("bowerbird")
+DEFAULT_OUTPUT_DIR = Path("instadata")
 
 
 class TransportTier(StrEnum):
@@ -167,7 +167,7 @@ class StorageConfig(FrozenConfig):
 
         The name is sanitised here rather than at the call sites: not every
         username reaching this method came from
-        :func:`~bowerbird.utils.urls.normalize_username`. A single
+        :func:`~instadata.utils.urls.normalize_username`. A single
         post's owner handle comes straight out of Instagram's payload, and a
         ``../`` in it would otherwise write outside the output directory.
         """
@@ -195,7 +195,7 @@ class ScraperConfig(FrozenConfig):
         ),
     )
 
-    cache_dir: Path = Path.home() / ".cache" / "bowerbird"
+    cache_dir: Path = Path.home() / ".cache" / "instadata"
     cookies_path: Path | None = None
     page_size: Annotated[int, Field(ge=1, le=50)] = Field(
         default=12,

@@ -13,10 +13,10 @@ import orjson
 import pytest
 from typer.testing import CliRunner
 
-from bowerbird.cli.app import app, build_config, render
-from bowerbird.errors import PrivateAccountError
-from bowerbird.models.config import TransportTier
-from bowerbird.scraper import ScrapeReport
+from instadata.cli.app import app, build_config, render
+from instadata.errors import PrivateAccountError
+from instadata.models.config import TransportTier
+from instadata.scraper import ScrapeReport
 
 runner = CliRunner()
 
@@ -65,7 +65,7 @@ def fake_scraper(monkeypatch: pytest.MonkeyPatch) -> None:
     # Fetched from sys.modules: the package exports an ``app`` Typer instance,
     # so both the dotted string and ``from ... import app`` resolve to that
     # object rather than to the module.
-    cli_module = sys.modules["bowerbird.cli.app"]
+    cli_module = sys.modules["instadata.cli.app"]
 
     FakeScraper.calls = []
     FakeScraper.error = None
@@ -127,9 +127,9 @@ class TestProfileCommand:
     ) -> None:
         import sys
 
-        from bowerbird.scraper import InstagramScraper
+        from instadata.scraper import InstagramScraper
 
-        cli_module = sys.modules["bowerbird.cli.app"]
+        cli_module = sys.modules["instadata.cli.app"]
         monkeypatch.setattr(cli_module, "InstagramScraper", InstagramScraper)
 
         result = runner.invoke(app, ["profile", "bad!!name"])
@@ -229,14 +229,14 @@ class TestOtherCommands:
     def test_every_command_help_shows_examples(self, command: str) -> None:
         out = runner.invoke(app, [command, "--help"]).stdout
         assert "Examples" in out
-        assert "bowerbird " in out
+        assert "instadata " in out
 
     def test_whoami_accepts_a_proxy_like_every_other_command(self) -> None:
         # It was the one command that hardcoded proxy=None.
         assert "--proxy" in runner.invoke(app, ["whoami", "--help"]).stdout
 
     def test_version_flag_prints_the_version(self) -> None:
-        from bowerbird import __version__
+        from instadata import __version__
 
         result = runner.invoke(app, ["--version"])
         assert result.exit_code == 0

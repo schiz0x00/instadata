@@ -7,15 +7,15 @@ from datetime import UTC
 import pytest
 from conftest import carousel_node, image_node, profile_payload, timeline_payload, video_node
 
-from bowerbird.errors import ParsingError
-from bowerbird.extractors.graphql import (
+from instadata.errors import ParsingError
+from instadata.extractors.graphql import (
     parse_media_node,
     parse_profile,
     parse_timeline_page,
 )
-from bowerbird.extractors.html import extract_json_blobs, extract_user_id
-from bowerbird.extractors.v1 import parse_reels_tray, parse_v1_item
-from bowerbird.models import MediaType
+from instadata.extractors.html import extract_json_blobs, extract_user_id
+from instadata.extractors.v1 import parse_reels_tray, parse_v1_item
+from instadata.models import MediaType
 
 
 class TestParseMediaNode:

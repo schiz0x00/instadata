@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from bowerbird.models import (
+from instadata.models import (
     Dimensions,
     Media,
     MediaResource,
@@ -18,7 +18,7 @@ from bowerbird.models import (
     Profile,
     ScraperConfig,
 )
-from bowerbird.models.config import TransportConfig
+from instadata.models.config import TransportConfig
 
 UTC_NOON = datetime(2026, 7, 31, 12, 0, 0, tzinfo=UTC)
 
@@ -224,8 +224,8 @@ class TestConfig:
             TransportConfig(proxy=proxy)
 
     def test_default_output_directory_is_named_after_the_tool(self) -> None:
-        assert ScraperConfig().storage.output_dir == Path("bowerbird")
-        assert ScraperConfig().storage.profile_dir("nasa") == Path("bowerbird/nasa")
+        assert ScraperConfig().storage.output_dir == Path("instadata")
+        assert ScraperConfig().storage.profile_dir("nasa") == Path("instadata/nasa")
 
     def test_profile_dir_is_namespaced_by_username(self) -> None:
         assert ScraperConfig().storage.profile_dir("nasa").name == "nasa"

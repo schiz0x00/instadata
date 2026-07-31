@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from bowerbird.downloader.media import _label, _total_size
-from bowerbird.utils.humanize import format_bytes, format_duration, format_rate
+from instadata.downloader.media import _label, _total_size
+from instadata.utils.humanize import format_bytes, format_duration, format_rate
 
 
 class TestFormatBytes:

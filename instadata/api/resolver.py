@@ -124,7 +124,7 @@ class HtmlPageStrategy:
 class CachingUserResolver:
     """Resolves usernames through a strategy chain, caching every success.
 
-    Satisfies :class:`~bowerbird.interfaces.UserIdResolver`.
+    Satisfies :class:`~instadata.interfaces.UserIdResolver`.
 
     Args:
         strategies: Tried in order. First success wins.

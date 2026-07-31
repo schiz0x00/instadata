@@ -78,21 +78,21 @@ Fast, resumable Instagram media scraper. HTTP first; a browser only if forced.
 _ROOT_EPILOG = """
 [bold]Examples[/bold]
 
-[cyan]bowerbird profile nasa[/cyan]
+[cyan]instadata profile nasa[/cyan]
 
-[cyan]bowerbird profile nasa --limit 50 --output ./out --workers 16[/cyan]
+[cyan]instadata profile nasa --limit 50 --output ./out --workers 16[/cyan]
 
-[cyan]bowerbird post https://instagram.com/p/DbbY9pdm6Q2/ --cookies c.json[/cyan]
+[cyan]instadata post https://instagram.com/p/DbbY9pdm6Q2/ --cookies c.json[/cyan]
 
-[cyan]bowerbird story nasa --cookies c.json[/cyan]
+[cyan]instadata story nasa --cookies c.json[/cyan]
 
-[cyan]bowerbird whoami nasa --json[/cyan]
+[cyan]instadata whoami nasa --json[/cyan]
 
 Run [cyan]instagram COMMAND --help[/cyan] for a command's own options.
 """
 
 app = typer.Typer(
-    name="bowerbird",
+    name="instadata",
     help=_ROOT_HELP,
     epilog=_ROOT_EPILOG,
     no_args_is_help=True,
@@ -303,10 +303,10 @@ def render(report: ScrapeReport, *, as_json: bool) -> None:
         "twelve posts. Pass --full to walk the whole account anyway."
     ),
     epilog=_examples(
-        "bowerbird profile nasa",
-        "bowerbird profile nasa --limit 50 --profile-picture",
-        "bowerbird profile nasa            # again later: fetches only new posts",
-        "bowerbird profile nasa --full     # backfill posts an earlier run failed",
+        "instadata profile nasa",
+        "instadata profile nasa --limit 50 --profile-picture",
+        "instadata profile nasa            # again later: fetches only new posts",
+        "instadata profile nasa --full     # backfill posts an earlier run failed",
     ),
 )
 def profile(
@@ -359,8 +359,8 @@ def profile(
         "post pages, so this falls back to an endpoint requiring a session."
     ),
     epilog=_examples(
-        "bowerbird post https://instagram.com/p/DbbY9pdm6Q2/ --cookies c.json",
-        "bowerbird post DbbY9pdm6Q2 --cookies c.json",
+        "instadata post https://instagram.com/p/DbbY9pdm6Q2/ --cookies c.json",
+        "instadata post DbbY9pdm6Q2 --cookies c.json",
     ),
 )
 def post(
@@ -393,7 +393,7 @@ def post(
         "options to post."
     ),
     epilog=_examples(
-        "bowerbird reel https://instagram.com/reel/Dbd9uTISQNu/ --cookies c.json",
+        "instadata reel https://instagram.com/reel/Dbd9uTISQNu/ --cookies c.json",
     ),
 )
 def reel(
@@ -426,7 +426,7 @@ def reel(
         "Lands in <output>/<user>/stories/."
     ),
     epilog=_examples(
-        "bowerbird story nasa --cookies c.json",
+        "instadata story nasa --cookies c.json",
     ),
 )
 def story(
@@ -459,7 +459,7 @@ def story(
         "Lands in <output>/<user>/highlights/."
     ),
     epilog=_examples(
-        "bowerbird highlights nasa --cookies c.json",
+        "instadata highlights nasa --cookies c.json",
     ),
 )
 def highlights(
@@ -492,8 +492,8 @@ def highlights(
         "handle, proxy or cookie file works before a real run."
     ),
     epilog=_examples(
-        "bowerbird whoami nasa",
-        "bowerbird whoami nasa --json",
+        "instadata whoami nasa",
+        "instadata whoami nasa --json",
     ),
 )
 def whoami(

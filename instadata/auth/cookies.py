@@ -54,7 +54,7 @@ def parse_netscape_cookies(text: str) -> dict[str, str]:
 def format_netscape_cookies(cookies: Mapping[str, str], domain: str = _INSTAGRAM_DOMAIN) -> str:
     """Render cookies as a Netscape ``cookies.txt`` document."""
     expiry = int(time.time()) + 365 * 24 * 3600
-    lines = ["# Netscape HTTP Cookie File", "# Written by bowerbird"]
+    lines = ["# Netscape HTTP Cookie File", "# Written by instadata"]
     lines += [
         "\t".join([domain, "TRUE", "/", "TRUE", str(expiry), name, value])
         for name, value in cookies.items()

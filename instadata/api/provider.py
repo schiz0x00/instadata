@@ -117,7 +117,7 @@ class EscalatingTransportProvider:
         """The limiter pacing API calls across every tier.
 
         Not the downloader's: the CDN is a different host with a different
-        quota, so :class:`~bowerbird.downloader.media.MediaDownloader`
+        quota, so :class:`~instadata.downloader.media.MediaDownloader`
         is built with its own. Share this one only if you deliberately want
         media pulls to spend the API budget.
         """

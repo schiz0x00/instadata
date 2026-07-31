@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 
-from bowerbird.browser.transport import BrowserTransport
-from bowerbird.models.config import TransportConfig
-from bowerbird.utils.urls import split_proxy_credentials, validate_proxy_url
+from instadata.browser.transport import BrowserTransport
+from instadata.models.config import TransportConfig
+from instadata.utils.urls import split_proxy_credentials, validate_proxy_url
 
 
 class TestSplitProxyCredentials:

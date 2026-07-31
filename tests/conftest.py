@@ -182,7 +182,7 @@ def _no_leaked_log_sinks() -> Any:
     it, spraying ``I/O operation on closed file`` over later tests' output.
     """
     yield
-    from bowerbird.utils.logging import logger
+    from instadata.utils.logging import logger
 
     logger.remove()
 

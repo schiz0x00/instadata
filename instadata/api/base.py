@@ -40,7 +40,7 @@ _RATE_LIMIT_MARKERS = ("wait a few minutes", "rate limit", "too many requests")
 class SimpleResponse:
     """Transport-agnostic HTTP response.
 
-    Satisfies the :class:`~bowerbird.interfaces.Response` protocol.
+    Satisfies the :class:`~instadata.interfaces.Response` protocol.
     Both HTTP tiers convert their native response into this so nothing above
     the transport layer touches a library type.
     """

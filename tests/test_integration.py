@@ -15,14 +15,14 @@ import orjson
 import pytest
 from conftest import carousel_node, image_node, profile_payload, timeline_payload, video_node
 
-from bowerbird.api.client import InstagramClient
-from bowerbird.api.http_transport import HttpxTransport
-from bowerbird.api.provider import EscalatingTransportProvider
-from bowerbird.api.resolver import CachingUserResolver, WebProfileInfoStrategy
-from bowerbird.cache import JsonCache, MemoryCache
-from bowerbird.downloader import MediaDownloader
-from bowerbird.errors import AuthenticationError, PrivateAccountError
-from bowerbird.models.config import (
+from instadata.api.client import InstagramClient
+from instadata.api.http_transport import HttpxTransport
+from instadata.api.provider import EscalatingTransportProvider
+from instadata.api.resolver import CachingUserResolver, WebProfileInfoStrategy
+from instadata.cache import JsonCache, MemoryCache
+from instadata.downloader import MediaDownloader
+from instadata.errors import AuthenticationError, PrivateAccountError
+from instadata.models.config import (
     DownloadConfig,
     RateLimitConfig,
     RetryConfig,
@@ -30,10 +30,10 @@ from bowerbird.models.config import (
     StorageConfig,
     TransportTier,
 )
-from bowerbird.pagination import TimelinePaginator
-from bowerbird.retry import NullRateLimiter, RetryPolicy
-from bowerbird.scraper import InstagramScraper
-from bowerbird.storage import FileStateStore
+from instadata.pagination import TimelinePaginator
+from instadata.retry import NullRateLimiter, RetryPolicy
+from instadata.scraper import InstagramScraper
+from instadata.storage import FileStateStore
 
 MEDIA_BODY = b"media-bytes" * 50
 

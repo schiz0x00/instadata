@@ -1,7 +1,7 @@
 """Parsers for Instagram's GraphQL (``edge_*``) payload shape.
 
 The only module that knows Instagram's field names for timeline data.
-Everything downstream consumes :class:`~bowerbird.models.media.Media`,
+Everything downstream consumes :class:`~instadata.models.media.Media`,
 so a payload change is contained here.
 
 Field names verified against a live logged-out response on 2026-07-31.

@@ -105,7 +105,7 @@ class HttpxTransport:
         Raises:
             NetworkError: Connection, TLS or timeout failure.
             AuthenticationError | RateLimitError | NotFoundError |
-            HTTPStatusError: Per :func:`~bowerbird.api.base.classify_status`.
+            HTTPStatusError: Per :func:`~instadata.api.base.classify_status`.
         """
         client = await self._ensure_client()
         try:

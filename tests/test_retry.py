@@ -4,15 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from bowerbird.errors import (
+from instadata.errors import (
     AuthenticationError,
     HTTPStatusError,
     NetworkError,
     ParsingError,
     RateLimitError,
 )
-from bowerbird.models.config import RateLimitConfig, RetryConfig
-from bowerbird.retry import AdaptiveRateLimiter, RetryPolicy, is_retryable
+from instadata.models.config import RateLimitConfig, RetryConfig
+from instadata.retry import AdaptiveRateLimiter, RetryPolicy, is_retryable
 
 NO_JITTER = RetryConfig(jitter=0.0, initial_backoff=1.0, backoff_multiplier=2.0, max_attempts=4)
 

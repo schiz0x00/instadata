@@ -1,4 +1,4 @@
-# bowerbird
+# instadata
 
 Production Instagram media scraper. Fully async, fully typed, resumable, and
 **HTTP-first**: a browser is a recovery mechanism, not the scraper.
@@ -32,24 +32,24 @@ provider locks onto it instead of re-walking the ladder every request.
 Recommended, as an isolated command-line tool:
 
 ```bash
-pipx install bowerbird
+pipx install instadata
 ```
 
-That is the whole install. `bowerbird` (and the short alias `bb`) land on your
+That is the whole install. `instadata` (and the short alias `bb`) land on your
 PATH in their own virtualenv, with nothing leaking into your system Python.
 
 Run it once without installing anything:
 
 ```bash
-pipx run bowerbird profile nasa
+pipx run instadata profile nasa
 ```
 
 Other routes:
 
 ```bash
-uv tool install bowerbird          # same idea, uv's tool installer
-pip install bowerbird              # into whatever environment is active
-python -m bowerbird --help         # module form, no console script needed
+uv tool install instadata          # same idea, uv's tool installer
+pip install instadata              # into whatever environment is active
+python -m instadata --help         # module form, no console script needed
 ```
 
 Python 3.13+.
@@ -60,12 +60,12 @@ Tier 4 needs Chromium and is not installed by default; without it the tier is
 simply skipped and everything else works. Add it only if you want it:
 
 ```bash
-pipx install "bowerbird[browser]"
-pipx run --spec "bowerbird[browser]" bowerbird ...   # or one-off
+pipx install "instadata[browser]"
+pipx run --spec "instadata[browser]" instadata ...   # or one-off
 playwright install chromium                          # the browser itself
 ```
 
-Already installed without it? `pipx inject bowerbird cloakbrowser playwright`.
+Already installed without it? `pipx inject instadata cloakbrowser playwright`.
 
 ### From a checkout
 
@@ -81,29 +81,29 @@ pytest
 
 ```bash
 # whole profile, resumable
-bowerbird profile nasa
+instadata profile nasa
 
 # first 50 posts into ./out, 16 download workers
-bowerbird profile nasa --limit 50 --output out --workers 16
+instadata profile nasa --limit 50 --output out --workers 16
 
 # single post, reel, stories, highlights
-bowerbird post https://www.instagram.com/p/DbbY9pdm6Q2/
-bowerbird reel https://www.instagram.com/reel/Dbd9uTISQNu/
-bowerbird story nasa      --cookies cookies.json
-bowerbird highlights nasa --cookies cookies.json
+instadata post https://www.instagram.com/p/DbbY9pdm6Q2/
+instadata reel https://www.instagram.com/reel/Dbd9uTISQNu/
+instadata story nasa      --cookies cookies.json
+instadata highlights nasa --cookies cookies.json
 
 # resolve a username to its numeric id
-bowerbird whoami nasa
+instadata whoami nasa
 ```
 
-Installed via pipx you get `bowerbird` and the shorter `bb`. Without a
-console script on PATH, `python -m bowerbird ...` is equivalent.
+Installed via pipx you get `instadata` and the shorter `bb`. Without a
+console script on PATH, `python -m instadata ...` is equivalent.
 
 ### Options
 
 | Flag | Meaning |
 |---|---|
-| `--output, -o` | Output directory (default `bowerbird/`) |
+| `--output, -o` | Output directory (default `instadata/`) |
 | `--workers, -w` | Concurrent downloads (default 8) |
 | `--limit, -n` | Stop after N posts |
 | `--resume / --no-resume` | Continue from saved cursor (default on) |
@@ -118,8 +118,8 @@ console script on PATH, `python -m bowerbird ...` is equivalent.
 ### As a library
 
 ```python
-from bowerbird import ScraperConfig
-from bowerbird.scraper import InstagramScraper
+from instadata import ScraperConfig
+from instadata.scraper import InstagramScraper
 
 async with InstagramScraper.build(ScraperConfig()) as scraper:
     report = await scraper.scrape_profile("nasa", limit=100)
@@ -129,7 +129,7 @@ async with InstagramScraper.build(ScraperConfig()) as scraper:
 Streaming, without touching the disk:
 
 ```python
-from bowerbird.api.client import InstagramClient
+from instadata.api.client import InstagramClient
 
 async with InstagramClient.build() as client:
     async for media in client.iter_posts("nasa"):
@@ -144,7 +144,7 @@ time, whatever the account size.
 ## Output
 
 ```
-bowerbird/nasa/
+instadata/nasa/
   20260731_190054_Dbd9uTISQNu.mp4          reel
   20260730_185958_DbbY9pdm6Q2_01.jpg       carousel slide 1
   20260730_185958_DbbY9pdm6Q2_03.mp4       carousel slide 3 (video)
@@ -172,9 +172,9 @@ at page 530 and the next run starts at 531 — no re-walking, and no re-spending
 530 pages of rate-limit budget.
 
 ```bash
-bowerbird profile nasa          # ^C at any point
-bowerbird profile nasa          # continues from the saved cursor
-bowerbird profile nasa --no-resume   # ignore saved state entirely
+instadata profile nasa          # ^C at any point
+instadata profile nasa          # continues from the saved cursor
+instadata profile nasa --no-resume   # ignore saved state entirely
 ```
 
 Re-running a **finished** account picks up new posts. The cursor is not reused
@@ -222,7 +222,7 @@ Credentials are never accepted or stored. Export cookies from a browser you
 already logged into and pass the file:
 
 ```bash
-bowerbird profile private_account --cookies cookies.json
+instadata profile private_account --cookies cookies.json
 ```
 
 Both formats work: JSON (`{"sessionid": "..."}` or an extension's
@@ -248,9 +248,9 @@ One `--proxy` applies to every tier, media downloads included. Available on
 every command.
 
 ```bash
-bowerbird profile nasa --proxy http://host:8080
-bowerbird profile nasa --proxy socks5://host:1080
-bowerbird profile nasa --proxy http://user:pass@host:8080
+instadata profile nasa --proxy http://host:8080
+instadata profile nasa --proxy socks5://host:1080
+instadata profile nasa --proxy http://user:pass@host:8080
 ```
 
 Schemes: `http`, `https`, `socks5`, `socks5h`. The URL is validated
@@ -319,7 +319,7 @@ InstagramScraper ── StateStore (resume) ── MetadataStore (jsonl)
 ```
 
 ```
-bowerbird/
+instadata/
   api/          endpoints, transports, escalation ladder, client, resolver
   auth/         cookie loading, persistence, import/export
   browser/      tier 4; imported lazily

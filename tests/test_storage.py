@@ -8,13 +8,13 @@ import orjson
 import pytest
 from conftest import carousel_node, image_node, video_node
 
-from bowerbird.auth import FileCookieProvider, format_netscape_cookies
-from bowerbird.cache import FileCache, JsonCache, MemoryCache
-from bowerbird.errors import AuthenticationError, ConfigurationError
-from bowerbird.extractors.graphql import parse_media_node
-from bowerbird.storage import FileStateStore, JobState, JsonLinesMetadataStore
-from bowerbird.utils.files import atomic_write_bytes, file_digest, sanitize_path_component
-from bowerbird.utils.urls import extract_shortcode, normalize_username, url_extension
+from instadata.auth import FileCookieProvider, format_netscape_cookies
+from instadata.cache import FileCache, JsonCache, MemoryCache
+from instadata.errors import AuthenticationError, ConfigurationError
+from instadata.extractors.graphql import parse_media_node
+from instadata.storage import FileStateStore, JobState, JsonLinesMetadataStore
+from instadata.utils.files import atomic_write_bytes, file_digest, sanitize_path_component
+from instadata.utils.urls import extract_shortcode, normalize_username, url_extension
 
 
 class TestMetadataStore:
@@ -274,30 +274,30 @@ class TestShortcodeConversion:
     """Shortcode ↔ media id, verified against a live post on 2026-07-31."""
 
     def test_known_pair_converts_both_ways(self) -> None:
-        from bowerbird.utils.shortcode import media_id_to_shortcode, shortcode_to_media_id
+        from instadata.utils.shortcode import media_id_to_shortcode, shortcode_to_media_id
 
         assert shortcode_to_media_id("DbbY9pdm6Q2") == "3952862887472243766"
         assert media_id_to_shortcode("3952862887472243766") == "DbbY9pdm6Q2"
 
     def test_round_trip_is_stable(self) -> None:
-        from bowerbird.utils.shortcode import media_id_to_shortcode, shortcode_to_media_id
+        from instadata.utils.shortcode import media_id_to_shortcode, shortcode_to_media_id
 
         for code in ("Dbd9uTISQNu", "ABCDEFGHIJK", "A"):
             assert media_id_to_shortcode(shortcode_to_media_id(code)).endswith(code.lstrip("A"))
 
     def test_carousel_suffix_is_ignored(self) -> None:
-        from bowerbird.utils.shortcode import shortcode_to_media_id
+        from instadata.utils.shortcode import shortcode_to_media_id
 
         assert shortcode_to_media_id("DbbY9pdm6Q2_extra") == shortcode_to_media_id("DbbY9pdm6Q2")
 
     def test_invalid_character_raises(self) -> None:
-        from bowerbird.utils.shortcode import shortcode_to_media_id
+        from instadata.utils.shortcode import shortcode_to_media_id
 
         with pytest.raises(ValueError):
             shortcode_to_media_id("bad!code")
 
     def test_negative_media_id_raises(self) -> None:
-        from bowerbird.utils.shortcode import media_id_to_shortcode
+        from instadata.utils.shortcode import media_id_to_shortcode
 
         with pytest.raises(ValueError):
             media_id_to_shortcode(-1)

@@ -61,7 +61,7 @@ class Transport(Protocol):
     """One rung of the escalation ladder.
 
     Implementations translate their library's exceptions into this package's
-    :mod:`~bowerbird.errors` types, so callers never catch an
+    :mod:`~instadata.errors` types, so callers never catch an
     ``httpx``/``curl_cffi``/``playwright`` exception.
     """
 

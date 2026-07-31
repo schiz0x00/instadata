@@ -146,7 +146,7 @@ class BrowserTransport:
         Raises:
             NetworkError: The browser could not run the request.
             AuthenticationError | RateLimitError | NotFoundError |
-            HTTPStatusError: Per :func:`~bowerbird.api.base.classify_status`.
+            HTTPStatusError: Per :func:`~instadata.api.base.classify_status`.
         """
         page = await self._ensure_page()
         full_url = f"{url}?{urlencode(dict(params))}" if params else url

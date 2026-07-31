@@ -100,7 +100,7 @@ class ImpersonatedTransport:
         Raises:
             NetworkError: libcurl-level failure.
             AuthenticationError | RateLimitError | NotFoundError |
-            HTTPStatusError: Per :func:`~bowerbird.api.base.classify_status`.
+            HTTPStatusError: Per :func:`~instadata.api.base.classify_status`.
         """
         session = await self._ensure_session()
         try:

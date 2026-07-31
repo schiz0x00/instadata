@@ -9,15 +9,15 @@ import httpx
 import pytest
 from conftest import carousel_node, image_node
 
-from bowerbird.api.http_transport import HttpxTransport
-from bowerbird.downloader import MediaDownloader
-from bowerbird.downloader import media as media_module
-from bowerbird.errors import DownloadError, HTTPStatusError, MediaUnavailableError
-from bowerbird.extractors.graphql import parse_media_node
-from bowerbird.models.config import DownloadConfig, RetryConfig
-from bowerbird.retry import RetryPolicy
-from bowerbird.utils.humanize import format_bytes
-from bowerbird.utils.logging import logger
+from instadata.api.http_transport import HttpxTransport
+from instadata.downloader import MediaDownloader
+from instadata.downloader import media as media_module
+from instadata.errors import DownloadError, HTTPStatusError, MediaUnavailableError
+from instadata.extractors.graphql import parse_media_node
+from instadata.models.config import DownloadConfig, RetryConfig
+from instadata.retry import RetryPolicy
+from instadata.utils.humanize import format_bytes
+from instadata.utils.logging import logger
 
 BODY = b"binary-content" * 100
 FAST_RETRY = RetryConfig(max_attempts=2, initial_backoff=0.0001, jitter=0.0)

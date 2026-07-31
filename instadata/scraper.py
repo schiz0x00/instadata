@@ -256,7 +256,7 @@ class InstagramScraper:
         """Download a user's stories, or every highlight reel.
 
         Both require a session; the client raises
-        :class:`~bowerbird.errors.AuthenticationError` without one.
+        :class:`~instadata.errors.AuthenticationError` without one.
         """
         username = normalize_username(username)
         items = (

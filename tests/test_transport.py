@@ -7,10 +7,10 @@ from pathlib import Path
 import httpx
 import pytest
 
-from bowerbird.api.base import check_graphql_errors, classify_status, parse_json
-from bowerbird.api.http_transport import HttpxTransport
-from bowerbird.api.provider import EscalatingTransportProvider
-from bowerbird.errors import (
+from instadata.api.base import check_graphql_errors, classify_status, parse_json
+from instadata.api.http_transport import HttpxTransport
+from instadata.api.provider import EscalatingTransportProvider
+from instadata.errors import (
     AllTiersFailedError,
     AuthenticationError,
     HTTPStatusError,
@@ -20,13 +20,13 @@ from bowerbird.errors import (
     PrivateAccountError,
     RateLimitError,
 )
-from bowerbird.models.config import (
+from instadata.models.config import (
     RateLimitConfig,
     RetryConfig,
     ScraperConfig,
     TransportTier,
 )
-from bowerbird.retry import NullRateLimiter, RetryPolicy
+from instadata.retry import NullRateLimiter, RetryPolicy
 
 FAST = ScraperConfig(
     retry=RetryConfig(max_attempts=2, initial_backoff=0.0001, jitter=0.0),
@@ -207,15 +207,15 @@ class TestDefaultFactory:
     def test_authenticated_tier_is_skipped_without_a_cookie_file(self) -> None:
         # A null provider carries no session, so this tier would be a
         # byte-for-byte repeat of tier 2 costing an extra round trip.
-        from bowerbird.api.provider import default_transport_factory
-        from bowerbird.auth import NullCookieProvider
+        from instadata.api.provider import default_transport_factory
+        from instadata.auth import NullCookieProvider
 
         factory = default_transport_factory(ScraperConfig(), NullCookieProvider())
         assert factory(TransportTier.AUTHENTICATED) is None
 
     def test_authenticated_tier_is_built_when_cookies_are_configured(self, tmp_path: Path) -> None:
-        from bowerbird.api.provider import default_transport_factory
-        from bowerbird.auth import FileCookieProvider
+        from instadata.api.provider import default_transport_factory
+        from instadata.auth import FileCookieProvider
 
         path = tmp_path / "cookies.json"
         config = ScraperConfig(cookies_path=path)

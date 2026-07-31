@@ -1,4 +1,4 @@
-"""``python -m bowerbird`` entry point."""
+"""``python -m instadata`` entry point."""
 
 from .cli.app import main
 

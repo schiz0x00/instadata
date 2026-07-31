@@ -6,8 +6,8 @@ import orjson
 import pytest
 from conftest import FakeProvider, carousel_node, image_node, timeline_payload, video_node
 
-from bowerbird.errors import ParsingError
-from bowerbird.pagination import TimelinePaginator, collect
+from instadata.errors import ParsingError
+from instadata.pagination import TimelinePaginator, collect
 
 
 def variables(call: tuple[str, str, dict]) -> dict:
