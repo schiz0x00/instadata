@@ -1,16 +1,24 @@
 name: CI
 
+# Runs on every push to dev, and on every PR aimed at main. Branch protection
+# on main should require these jobs, which is what stops an unreviewed or
+# failing change reaching the branch that publishes.
 on:
   push:
-    branches: [main]
+    branches: [dev]
   pull_request:
+    branches: [main, dev]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   test:
+    name: test (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -29,8 +37,7 @@ jobs:
       - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
-          pip install -e .
+          pip install -e ".[dev]"
 
       - name: Test
         run: pytest --cov --cov-report=term-missing
@@ -49,3 +56,27 @@ jobs:
           pip install ruff
           ruff check .
           ruff format --check .
+
+  build:
+    # Proves the artifacts are buildable and installable before main ever tries
+    # to publish them. A packaging mistake caught here is a red PR; caught in
+    # release.yml it is a version number burned on PyPI, which cannot be reused.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build wheel and sdist
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - name: Install the wheel and run the console script
+        run: |
+          pip install dist/*.whl
+          instadata --version
+          idata --version

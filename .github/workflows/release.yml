@@ -1,0 +1,116 @@
+name: Release
+
+# Publishes to PyPI when main gains a version it has not published before.
+#
+# The filename must stay release.yml: it is registered on PyPI as the trusted
+# publisher for this project, and renaming it silently breaks authentication.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    # main moves on every merge, but most merges are not releases. This decides
+    # whether the version in pyproject is already on PyPI, so re-running or
+    # merging docs does not attempt a duplicate upload PyPI would reject.
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      publish: ${{ steps.check.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - id: check
+        run: |
+          version=$(python -c "import tomllib,pathlib; \
+            print(tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'])")
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          # /simple/ is authoritative: /pypi/<name>/json returns 404 for a
+          # project that is registered but has no releases yet.
+          if curl -sf "https://pypi.org/simple/instadata/" | grep -q "instadata-$version\."; then
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::$version is already on PyPI, nothing to publish"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$version is new, will publish"
+          fi
+
+  test:
+    needs: guard
+    if: needs.guard.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Build wheel and sdist
+        run: |
+          pip install build twine
+          python -m build
+          twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: [guard, build]
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      # Mints the OIDC token PyPI exchanges for an upload token. This is the
+      # whole point of trusted publishing: no API token is ever stored here.
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  tag:
+    needs: [guard, publish]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag the released commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ needs.guard.outputs.version }}" \
+            -m "Release v${{ needs.guard.outputs.version }}"
+          git push origin "v${{ needs.guard.outputs.version }}"
