@@ -35,7 +35,7 @@ Recommended, as an isolated command-line tool:
 pipx install instadata
 ```
 
-That is the whole install. `instadata` (and the short alias `bb`) land on your
+That is the whole install. `instadata` (and the short alias `idata`) land on your
 PATH in their own virtualenv, with nothing leaking into your system Python.
 
 Run it once without installing anything:
@@ -96,7 +96,7 @@ instadata highlights nasa --cookies cookies.json
 instadata whoami nasa
 ```
 
-Installed via pipx you get `instadata` and the shorter `bb`. Without a
+Installed via pipx you get `instadata` and the shorter `idata`. Without a
 console script on PATH, `python -m instadata ...` is equivalent.
 
 ### Options
