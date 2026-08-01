@@ -6,6 +6,7 @@ argument wiring, exit codes and rendering.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +20,18 @@ from instadata.models.config import TransportTier
 from instadata.scraper import ScrapeReport
 
 runner = CliRunner()
+
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")
+
+
+def help_text(*args: str) -> str:
+    """Rendered help with styling removed.
+
+    rich colours option names when it detects a CI terminal, which splits
+    ``--proxy`` with escape sequences and breaks a plain substring check. The
+    tests care what the help says, not how the terminal painted it.
+    """
+    return _ANSI.sub("", runner.invoke(app, [*args, "--help"]).stdout)
 
 
 class FakeScraper:
@@ -180,12 +193,12 @@ class TestOtherCommands:
         assert FakeScraper.calls[0][1]["highlights"] is True
 
     def test_help_lists_every_command(self) -> None:
-        result = runner.invoke(app, ["--help"])
+        out = help_text()
         for command in ("profile", "post", "reel", "story", "highlights", "whoami"):
-            assert command in result.stdout
+            assert command in out
 
     def test_root_help_covers_capabilities_auth_and_examples(self) -> None:
-        out = runner.invoke(app, ["--help"]).stdout
+        out = help_text()
         for expected in (
             "What it downloads",
             "Session requirements",
@@ -199,20 +212,20 @@ class TestOtherCommands:
     def test_help_documents_incremental_behaviour_and_its_escape_hatches(self) -> None:
         # This help went stale once already: it still described the pre-archive
         # design after the walk had been made incremental.
-        root = runner.invoke(app, ["--help"]).stdout
+        root = help_text()
         assert "Incremental" in root
         assert "metadata.jsonl" in root
         assert "--full" in root
         assert "--no-metadata" in root
 
-        profile_help = runner.invoke(app, ["profile", "--help"]).stdout
+        profile_help = help_text("profile")
         assert "--full" in profile_help
         assert "nothing new" in profile_help
 
     def test_no_metadata_flag_warns_that_it_disables_the_archive(self) -> None:
         # --no-metadata silently turns a 2-request re-check into a full walk;
         # that coupling has to be visible where the flag is documented.
-        out = runner.invoke(app, ["profile", "--help"]).stdout
+        out = help_text("profile")
         assert "archive" in out
 
     def test_help_text_carries_no_restructuredtext_markup(self) -> None:
@@ -220,20 +233,19 @@ class TestOtherCommands:
         # separate so ``literal`` markup never reaches a terminal.
         commands = ["profile", "post", "reel", "story", "highlights", "whoami"]
         for name in [None, *commands]:
-            args = ["--help"] if name is None else [name, "--help"]
-            assert "``" not in runner.invoke(app, args).stdout, name
+            assert "``" not in help_text(*([] if name is None else [name])), name
 
     @pytest.mark.parametrize(
         "command", ["profile", "post", "reel", "story", "highlights", "whoami"]
     )
     def test_every_command_help_shows_examples(self, command: str) -> None:
-        out = runner.invoke(app, [command, "--help"]).stdout
+        out = help_text(command)
         assert "Examples" in out
         assert "instadata " in out
 
     def test_whoami_accepts_a_proxy_like_every_other_command(self) -> None:
         # It was the one command that hardcoded proxy=None.
-        assert "--proxy" in runner.invoke(app, ["whoami", "--help"]).stdout
+        assert "--proxy" in help_text("whoami")
 
     def test_version_flag_prints_the_version(self) -> None:
         from instadata import __version__

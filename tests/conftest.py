@@ -174,6 +174,22 @@ class FakeProvider:
 
 
 @pytest.fixture(autouse=True)
+def _deterministic_rich_output(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Render help text plainly, whatever the surrounding environment.
+
+    rich enables colour when it detects CI, and typer styles option names, so
+    ``--proxy`` stops being a contiguous substring of the rendered help — the
+    assertions pass on a developer's machine and fail in GitHub Actions. Pin
+    colour off and the width wide so what the tests read is what the code
+    produced, not what the terminal happened to do to it.
+    """
+    monkeypatch.setenv("NO_COLOR", "1")
+    monkeypatch.setenv("TERM", "dumb")
+    monkeypatch.setenv("COLUMNS", "200")
+    monkeypatch.delenv("FORCE_COLOR", raising=False)
+
+
+@pytest.fixture(autouse=True)
 def _no_leaked_log_sinks() -> Any:
     """Drop any sink a test installed via ``configure_logging``.
 

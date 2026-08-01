@@ -88,7 +88,7 @@ _ROOT_EPILOG = """
 
 [cyan]instadata whoami nasa --json[/cyan]
 
-Run [cyan]instagram COMMAND --help[/cyan] for a command's own options.
+Run [cyan]instadata COMMAND --help[/cyan] for a command's own options.
 """
 
 app = typer.Typer(
@@ -113,9 +113,14 @@ def _examples(*lines: str) -> str:
 
 
 def _version(value: bool) -> None:
-    """Print the version and exit, as an eager ``--version`` callback."""
+    """Print the version and exit, as an eager ``--version`` callback.
+
+    Plain ``print``, not the rich console: rich's highlighter colourises a
+    version string into ``\x1b[1;36m0.1\x1b[0m.\x1b[1;36m0\x1b[0m``, so
+    ``VERSION=$(instadata --version)`` would capture escape codes.
+    """
     if value:
-        console.print(__version__)
+        print(__version__)
         raise typer.Exit()
 
 
@@ -250,6 +255,16 @@ def execute(coro: Any) -> Any:
         _fail(exc)
 
 
+def emit_json(payload: Any) -> None:
+    """Write a machine-readable JSON document to stdout.
+
+    Plain ``print``, not ``console.print_json``: rich syntax-highlights JSON,
+    and under a colour-forcing terminal the escape codes make the output fail
+    to parse. ``--json`` exists to be piped, so it stays bytes-exact.
+    """
+    print(orjson.dumps(payload, option=orjson.OPT_INDENT_2).decode())
+
+
 def run(coro: Any, *, as_json: bool) -> None:
     """Run a scrape coroutine and render its report."""
     render(execute(coro), as_json=as_json)
@@ -269,7 +284,7 @@ def render(report: ScrapeReport, *, as_json: bool) -> None:
             "completed": report.completed,
             "failures": report.failures,
         }
-        console.print_json(orjson.dumps(payload).decode())
+        emit_json(payload)
         return
 
     table = Table(title=f"@{report.username}", show_header=False, box=None)
@@ -518,7 +533,7 @@ def whoami(
     payload = execute(job())
 
     if as_json:
-        console.print_json(orjson.dumps(payload).decode())
+        emit_json(payload)
         return
     table = Table(show_header=False, box=None)
     for key in ("user_id", "username", "full_name", "is_private", "media_count", "follower_count"):
